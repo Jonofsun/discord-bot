@@ -1,15 +1,46 @@
-require("./server");
+// require("./server");
 require("dotenv").config();
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v9");
 const Discord = require("discord.js");
+var request = require("request");
 
 const client = new Discord.Client({
-  intents: [],
+  intents: [
+    Discord.GatewayIntentBits.Guilds,
+    Discord.GatewayIntentBits.GuildMessages,
+    Discord.GatewayIntentBits.MessageContent,
+    Discord.GatewayIntentBits.GuildIntegrations,
+  ],
 });
-
+const channelID = "1218014373327540367";
 client.once("ready", () => {
-  console.log("Bot is online!");
-});
+  const guild_ids = client.guilds.cache.map((guild) => guild.id);
 
+  const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
+
+  console.log("Bot is online!");
+  console.log(guild_ids);
+  // var Options = {
+  //   uri: "https://discord.com/api/webhooks/1218819527156961341/GPnX1gsbO4OReqvk1_KXe-wz7sEDi8Vbg2jf1J4JdfM3anLhxrU6fqUpgkx5XXdh53aK",
+  //   body: JSON.stringify({ content: "hello, world" }),
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // };
+  // request(Options, function (error, response) {
+  //   console.log(error, response);
+  //   return;
+  // });
+
+  // rest.post(Routes.channelMessages(channelID), {
+  //   content: "Hello,world",
+  // });
+});
+const sendmessageInChat = function (text) {
+  client.channels.cache.get(channelID).send(text);
+};
 client.on("messageCreate", (message) => {
   if (message.content === "!ping") {
     message.channel.send("Pong!");
@@ -54,3 +85,6 @@ client.on("messageCreate", (message) => {
 //   console.log(`Server is running on port ${PORT}`);
 // });
 client.login(process.env.TOKEN);
+module.exports = {
+  sendmessageInChat,
+};
