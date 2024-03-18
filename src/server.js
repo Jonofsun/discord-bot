@@ -2,6 +2,7 @@ const bot = require("./index");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { Guild } = require("discord.js");
 const app = express();
 
 app.use(bodyParser.json()); // Middleware to parse JSON bodies
@@ -20,6 +21,23 @@ app.post("/send-message", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+app.post('/findmember', (req, res) => {
+  const { guildId, memberNameOrID } = req.body;
+
+  // Find the member in the guild
+  const guild = client.guilds.cache.get(guildId);
+  if (!guild) {
+      return res.status(404).json({ error: 'Guild not found' });
+  }
+
+  const member = guild.members.cache.find(member => member.user.username === memberNameOrID || member.id === memberNameOrID);
+  if (member) {
+      res.json({ member: member.user.tag });
+      bot.sendmessageInChat("Found ",member.user.tag);
+  } else {
+      res.status(404).json({ error: 'Member not found' });
   }
 });
 
