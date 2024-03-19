@@ -16,6 +16,8 @@ const client = new Discord.Client({
 const channelID = "1218014373327540367";
 client.once("ready", () => {
   const guild_ids = client.guilds.cache.map((guild) => guild.id);
+  prefix = "!"
+  
 
   const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
 
@@ -42,10 +44,14 @@ const sendmessageInChat = function (text) {
   client.channels.cache.get(channelID).send(text);
 };
 client.on("messageCreate", (message) => {
-  if (message.content === "!ping") {
+  if (message.content === prefix+"ping") {
     message.channel.send("Pong!");
   }
+  else if (message.content.includes('!nickname')) {
+    message.member.setNickname(message.content.replace(prefix+'nickname ', ''));
+  }
 });
+
 
 // app.use(express.json()); // Middleware to parse JSON bodies
 
