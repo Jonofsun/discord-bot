@@ -6,6 +6,7 @@ const Discord = require("discord.js");
 var request = require("request");
 // sessons: figure out how to type in a string of numbers to communicate with the api
 const client = new Discord.Client({
+  // Create a new Discord client with specific intents
   intents: [
     Discord.GatewayIntentBits.Guilds,
     Discord.GatewayIntentBits.GuildMessages,
@@ -13,11 +14,13 @@ const client = new Discord.Client({
     Discord.GatewayIntentBits.GuildIntegrations,
   ],
 });
+// Hardcoded channel and guild IDs for testing
 const channelID = "1218014373327540367";
 const guildId = "1218014373327540364";
 
 let botOnlin = false;
 client.on("ready", () => {
+  // Event listener for when the bot is ready
   botOnlin = true;
   console.log(`Logged in as ${client.user.tag}!`);
   const guild_ids = client.guilds.cache.map((guild) => guild.id);
@@ -64,6 +67,7 @@ const MemberFoundInChat = function (guildId, memberID) {
   }
 };
 client.on("messageCreate", (message) => {
+  // Event listener for message creation started project testing this out
   if (message.content === prefix + "ping") {
     message.channel.send("Pong!");
   } else if (message.content.includes("!nickname")) {
@@ -72,7 +76,7 @@ client.on("messageCreate", (message) => {
     );
   }
 });
-
+// Log in the client using the token from environment variables
 client.login(process.env.TOKEN);
 // (async () => {
 //   while (true) {
@@ -89,3 +93,4 @@ client.login(process.env.TOKEN);
 //   MemberFoundInChat,
 // };
 module.exports = { client };
+// Export the client object for use in other files
